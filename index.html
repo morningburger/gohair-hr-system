@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://tncfbpnm.gensparkspace.com/ -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고정현헤어 인사관리 시스템</title>
+    <link href="./index_files/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./index_files/all.min.css">
+    <script src="./index_files/chart.js.다운로드"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .position-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+        }
+        .position-인턴 { background-color: #e3f2fd; color: #1976d2; }
+        .position-디자이너 { background-color: #f3e5f5; color: #7b1fa2; }
+        .position-팀장 { background-color: #e8f5e8; color: #388e3c; }
+        .position-실장 { background-color: #fff3e0; color: #f57c00; }
+        .position-부원장 { background-color: #fce4ec; color: #c2185b; }
+        .position-원장 { background-color: #e1f5fe; color: #0277bd; }
+        .position-매니저 { background-color: #f1f8e9; color: #558b2f; }
+        .position-부점장 { background-color: #fff8e1; color: #ff8f00; }
+        .position-점장 { background-color: #efebe9; color: #5d4037; }
+    </style>
+<style>
+    .genspark-notice-dialog {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 10001;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .genspark-notice-content {
+      background-color: white;
+      border-radius: 8px;
+      max-width: 600px;
+      width: 90%;
+      box-sizing: border-box;
+      padding: 10px 30px 30px 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+    }
+
+    .genspark-notice-title {
+      color: #000;
+      font-family: Arial;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 150%; 
+    }
+
+    .genspark-notice-list {
+      margin: 24px 0;
+      
+      color: #606366;
+      font-family: Arial;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 150%;
+      padding-left: 12px;
+    }
+
+    .genspark-notice-list li {
+      margin-bottom: 12px;
+      list-style-type: disc;
+    }
+
+    .genspark-notice-list li a {
+      color: #606366;
+      text-decoration: underline;
+    }
+
+    .genspark-notice-checkbox {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      gap: 10px;
+
+      color: #232425;
+
+      font-family: Arial;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }
+
+    .genspark-notice-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+      
+    .genspark-notice-ok {
+      color: #232425;
+
+      text-align: center;
+      font-family: Arial;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 150%; 
+
+      cursor: pointer;
+      display: flex;
+      height: 40px;
+      padding: 6px 14px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      align-self: stretch;
+      border-radius: 8px;
+      border: 1px solid #000;
+      box-sizing: border-box;
+      width: 100%;
+    }
+  </style></head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 로그인 화면 -->
+    <div id="loginScreen" class="min-h-screen gradient-bg flex items-center justify-center px-4">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">고정현헤어</h1>
+                <p class="text-gray-600">인사관리 시스템</p>
+            </div>
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">아이디</label>
+                    <input type="text" id="username" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="아이디를 입력하세요" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                    <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="비밀번호를 입력하세요" required="">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">로그인</button>
+            </form>
+            <div class="mt-6 text-center text-sm text-gray-600">
+                <p>본부장: admin / gohair2024</p>
+                <p>HR팀: hr / hr2024</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 시스템 -->
+    <div id="mainSystem" class="hidden">
+        <!-- 헤더 -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-semibold text-gray-900">고정현헤어 인사관리</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="currentUser" class="text-sm text-gray-600"></span>
+                        <button id="logoutBtn" class="text-sm text-red-600 hover:text-red-800">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 네비게이션 탭 -->
+        <nav class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-8">
+                    <button class="nav-tab active py-4 px-1 border-b-2 border-blue-500 text-blue-600 font-medium text-sm" data-tab="dashboard">
+                        <i class="fas fa-chart-line mr-2"></i>대시보드
+                    </button>
+                    <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="employees">
+                        <i class="fas fa-users mr-2"></i>직원 관리
+                    </button>
+                    <button class="nav-tab py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="training">
+                        <i class="fas fa-graduation-cap mr-2"></i>교육 이력
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 컨텐츠 영역 -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- 대시보드 탭 -->
+            <div id="dashboardTab" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-users text-blue-500 text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">전체 직원</p>
+                                <p id="totalEmployees" class="text-2xl font-semibold text-gray-900">0명</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-user-check text-green-500 text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">재직자</p>
+                                <p id="activeEmployees" class="text-2xl font-semibold text-gray-900">0명</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-graduation-cap text-purple-500 text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">교육 완료</p>
+                                <p id="completedTraining" class="text-2xl font-semibold text-gray-900">0명</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-chart-line text-orange-500 text-2xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm text-gray-600">이달 입사</p>
+                                <p id="monthlyJoins" class="text-2xl font-semibold text-gray-900">0명</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">직급별 분포</h3>
+                        <canvas id="positionChart"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow card-shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">월별 입퇴사 현황</h3>
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 직원 관리 탭 -->
+            <div id="employeesTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow card-shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <h3 class="text-lg font-semibold text-gray-900">직원 목록</h3>
+                            <div class="mt-4 sm:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                                <div class="relative">
+                                    <input type="text" id="searchInput" placeholder="이름으로 검색..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                </div>
+                                <select id="positionFilter" class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">전체 직급</option>
+                                    <option value="인턴">인턴</option>
+                                    <option value="디자이너">디자이너</option>
+                                    <option value="팀장">팀장</option>
+                                    <option value="실장">실장</option>
+                                    <option value="부원장">부원장</option>
+                                    <option value="원장">원장</option>
+                                    <option value="매니저">매니저</option>
+                                    <option value="부점장">부점장</option>
+                                    <option value="점장">점장</option>
+                                </select>
+                                <button id="addEmployeeBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                                    <i class="fas fa-plus mr-2"></i>새 직원 추가
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="employeesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 교육 이력 탭 -->
+            <div id="trainingTab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow card-shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <h3 class="text-lg font-semibold text-gray-900">교육 이력 관리</h3>
+                            <button id="addTrainingBtn" class="mt-4 sm:mt-0 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                                <i class="fas fa-plus mr-2"></i>교육 추가
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div id="trainingList" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 직원 추가/수정 모달 -->
+    <div id="employeeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 id="modalTitle" class="text-lg font-semibold text-gray-900">직원 추가</h3>
+            </div>
+            <form id="employeeForm" class="p-6 space-y-4">
+                <input type="hidden" id="employeeId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">이름</label>
+                    <input type="text" id="employeeName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">연락처</label>
+                    <input type="tel" id="employeePhone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
+                    <input type="email" id="employeeEmail" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">직급</label>
+                    <select id="employeePosition" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                        <option value="">직급 선택</option>
+                        <option value="인턴">인턴</option>
+                        <option value="디자이너">디자이너</option>
+                        <option value="팀장">팀장</option>
+                        <option value="실장">실장</option>
+                        <option value="부원장">부원장</option>
+                        <option value="원장">원장</option>
+                        <option value="매니저">매니저</option>
+                        <option value="부점장">부점장</option>
+                        <option value="점장">점장</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">입사일</label>
+                    <input type="date" id="employeeJoinDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">급여</label>
+                    <input type="number" id="employeeSalary" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="만원 단위">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancelBtn" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">취소</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 교육 추가 모달 -->
+    <div id="trainingModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">교육 추가</h3>
+            </div>
+            <form id="trainingForm" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">직원 선택</label>
+                    <select id="trainingEmployee" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                        <option value="">직원 선택</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">교육명</label>
+                    <input type="text" id="trainingName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">교육 기관</label>
+                    <input type="text" id="trainingInstitute" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">교육 날짜</label>
+                    <input type="date" id="trainingDate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required="">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">수료 여부</label>
+                    <select id="trainingCompleted" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="true">수료</option>
+                        <option value="false">미수료</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancelTrainingBtn" class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">취소</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentUser = null;
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+        let training = JSON.parse(localStorage.getItem('training')) || [];
+        let editingEmployeeId = null;
+
+        // 로그인 시스템
+        const loginForm = document.getElementById('loginForm');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainSystem = document.getElementById('mainSystem');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if ((username === 'admin' && password === 'gohair2024') || 
+                (username === 'hr' && password === 'hr2024')) {
+                currentUser = username;
+                document.getElementById('currentUser').textContent = username === 'admin' ? '본부장' : 'HR팀';
+                loginScreen.classList.add('hidden');
+                mainSystem.classList.remove('hidden');
+                loadDashboard();
+            } else {
+                alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+            }
+        });
+
+        // 로그아웃
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            currentUser = null;
+            loginScreen.classList.remove('hidden');
+            mainSystem.classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        // 탭 네비게이션
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                
+                navTabs.forEach(t => {
+                    t.classList.remove('active', 'border-blue-500', 'text-blue-600');
+                    t.classList.add('border-transparent', 'text-gray-500');
+                });
+                
+                this.classList.add('active', 'border-blue-500', 'text-blue-600');
+                this.classList.remove('border-transparent', 'text-gray-500');
+
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                document.getElementById(targetTab + 'Tab').classList.remove('hidden');
+
+                if (targetTab === 'dashboard') loadDashboard();
+                else if (targetTab === 'employees') loadEmployees();
+                else if (targetTab === 'training') loadTraining();
+            });
+        });
+
+        // 대시보드 로드
+        function loadDashboard() {
+            updateStats();
+            updateCharts();
+        }
+
+        function updateStats() {
+            const totalCount = employees.length;
+            const activeCount = employees.filter(emp => emp.status === 'active').length;
+            const completedTrainingCount = training.filter(t => t.completed).length;
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthlyJoinsCount = employees.filter(emp => {
+                const joinDate = new Date(emp.joinDate);
+                return joinDate.getMonth() === currentMonth && joinDate.getFullYear() === currentYear;
+            }).length;
+
+            document.getElementById('totalEmployees').textContent = totalCount + '명';
+            document.getElementById('activeEmployees').textContent = activeCount + '명';
+            document.getElementById('completedTraining').textContent = completedTrainingCount + '개';
+            document.getElementById('monthlyJoins').textContent = monthlyJoinsCount + '명';
+        }
+
+        function updateCharts() {
+            updatePositionChart();
+            updateMonthlyChart();
+        }
+
+        function updatePositionChart() {
+            const ctx = document.getElementById('positionChart').getContext('2d');
+            const positions = ['인턴', '디자이너', '팀장', '실장', '부원장', '원장', '매니저', '부점장', '점장'];
+            const positionCounts = positions.map(pos => 
+                employees.filter(emp => emp.position === pos && emp.status === 'active').length
+            );
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: positions,
+                    datasets: [{
+                        data: positionCounts,
+                        backgroundColor: [
+                            '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B',
+                            '#EF4444', '#06B6D4', '#84CC16', '#F97316', '#6B7280'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateMonthlyChart() {
+            const ctx = document.getElementById('monthlyChart').getContext('2d');
+            const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            const currentYear = new Date().getFullYear();
+
+            const joinCounts = months.map((_, index) => {
+                return employees.filter(emp => {
+                    const joinDate = new Date(emp.joinDate);
+                    return joinDate.getMonth() === index && joinDate.getFullYear() === currentYear;
+                }).length;
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: '입사자 수',
+                        data: joinCounts,
+                        backgroundColor: '#3B82F6',
+                        borderColor: '#1D4ED8',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 직원 관리
+        function loadEmployees() {
+            displayEmployees();
+            updateTrainingEmployeeOptions();
+        }
+
+        function displayEmployees() {
+            const employeesList = document.getElementById('employeesList');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const positionFilter = document.getElementById('positionFilter').value;
+
+            let filteredEmployees = employees.filter(emp => {
+                const matchesSearch = emp.name.toLowerCase().includes(searchTerm);
+                const matchesPosition = !positionFilter || emp.position === positionFilter;
+                return matchesSearch && matchesPosition;
+            });
+
+            employeesList.innerHTML = filteredEmployees.map(emp => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition duration-300">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${emp.name}</h4>
+                            <span class="position-badge position-${emp.position}">${emp.position}</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="editEmployee('${emp.id}')" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteEmployee('${emp.id}')" class="text-red-600 hover:text-red-800">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-1 text-sm text-gray-600">
+                        <p><i class="fas fa-phone w-4"></i> ${emp.phone}</p>
+                        <p><i class="fas fa-envelope w-4"></i> ${emp.email || '이메일 없음'}</p>
+                        <p><i class="fas fa-calendar w-4"></i> 입사일: ${emp.joinDate}</p>
+                        <p><i class="fas fa-won-sign w-4"></i> 급여: ${emp.salary ? emp.salary + '만원' : '정보없음'}</p>
+                    </div>
+                    <div class="mt-3 flex justify-between items-center">
+                        <span class="text-xs px-2 py-1 rounded-full ${emp.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${emp.status === 'active' ? '재직' : '퇴사'}
+                        </span>
+                        ${emp.status === 'active' ? 
+                            `<button onclick="toggleEmployeeStatus('${emp.id}')" class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded hover:bg-red-200">퇴사 처리</button>` :
+                            `<button onclick="toggleEmployeeStatus('${emp.id}')" class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded hover:bg-green-200">복직 처리</button>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 검색 및 필터링
+        document.getElementById('searchInput').addEventListener('input', displayEmployees);
+        document.getElementById('positionFilter').addEventListener('change', displayEmployees);
+
+        // 직원 추가 버튼
+        document.getElementById('addEmployeeBtn').addEventListener('click', function() {
+            editingEmployeeId = null;
+            document.getElementById('modalTitle').textContent = '직원 추가';
+            document.getElementById('employeeForm').reset();
+            document.getElementById('employeeModal').classList.remove('hidden');
+            document.getElementById('employeeModal').classList.add('flex');
+        });
+
+        // 직원 수정
+        function editEmployee(id) {
+            const employee = employees.find(emp => emp.id === id);
+            if (!employee) return;
+
+            editingEmployeeId = id;
+            document.getElementById('modalTitle').textContent = '직원 정보 수정';
+            document.getElementById('employeeId').value = employee.id;
+            document.getElementById('employeeName').value = employee.name;
+            document.getElementById('employeePhone').value = employee.phone;
+            document.getElementById('employeeEmail').value = employee.email || '';
+            document.getElementById('employeePosition').value = employee.position;
+            document.getElementById('employeeJoinDate').value = employee.joinDate;
+            document.getElementById('employeeSalary').value = employee.salary || '';
+            
+            document.getElementById('employeeModal').classList.remove('hidden');
+            document.getElementById('employeeModal').classList.add('flex');
+        }
+
+        // 직원 삭제
+        function deleteEmployee(id) {
+            if (confirm('정말로 이 직원을 삭제하시겠습니까?')) {
+                employees = employees.filter(emp => emp.id !== id);
+                training = training.filter(t => t.employeeId !== id);
+                saveData();
+                displayEmployees();
+                updateTrainingEmployeeOptions();
+            }
+        }
+
+        // 직원 상태 토글
+        function toggleEmployeeStatus(id) {
+            const employee = employees.find(emp => emp.id === id);
+            if (employee) {
+                employee.status = employee.status === 'active' ? 'inactive' : 'active';
+                saveData();
+                displayEmployees();
+            }
+        }
+
+        // 직원 폼 제출
+        document.getElementById('employeeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: editingEmployeeId || Date.now().toString(),
+                name: document.getElementById('employeeName').value,
+                phone: document.getElementById('employeePhone').value,
+                email: document.getElementById('employeeEmail').value,
+                position: document.getElementById('employeePosition').value,
+                joinDate: document.getElementById('employeeJoinDate').value,
+                salary: document.getElementById('employeeSalary').value,
+                status: 'active'
+            };
+
+            if (editingEmployeeId) {
+                const index = employees.findIndex(emp => emp.id === editingEmployeeId);
+                if (index !== -1) {
+                    employees[index] = { ...employees[index], ...formData };
+                }
+            } else {
+                employees.push(formData);
+            }
+
+            saveData();
+            closeModal();
+            displayEmployees();
+            updateTrainingEmployeeOptions();
+        });
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('employeeModal').classList.add('hidden');
+            document.getElementById('employeeModal').classList.remove('flex');
+        }
+
+        document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+        // 교육 이력 관리
+        function loadTraining() {
+            displayTraining();
+            updateTrainingEmployeeOptions();
+        }
+
+        function displayTraining() {
+            const trainingList = document.getElementById('trainingList');
+            
+            const trainingByEmployee = {};
+            training.forEach(t => {
+                const employee = employees.find(emp => emp.id === t.employeeId);
+                if (employee) {
+                    if (!trainingByEmployee[employee.name]) {
+                        trainingByEmployee[employee.name] = [];
+                    }
+                    trainingByEmployee[employee.name].push({...t, employeeName: employee.name});
+                }
+            });
+
+            trainingList.innerHTML = Object.keys(trainingByEmployee).map(employeeName => `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-3">${employeeName}</h4>
+                    <div class="space-y-2">
+                        ${trainingByEmployee[employeeName].map(t => `
+                            <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                <div>
+                                    <p class="font-medium">${t.name}</p>
+                                    <p class="text-sm text-gray-600">${t.institute || '기관 정보 없음'} • ${t.date}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 text-xs rounded-full ${t.completed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                        ${t.completed ? '수료' : '미수료'}
+                                    </span>
+                                    <button onclick="deleteTraining('${t.id}')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('') || '<p class="text-center text-gray-500 py-8">등록된 교육 이력이 없습니다.</p>';
+        }
+
+        function updateTrainingEmployeeOptions() {
+            const select = document.getElementById('trainingEmployee');
+            const activeEmployees = employees.filter(emp => emp.status === 'active');
+            
+            select.innerHTML = '<option value="">직원 선택</option>' +
+                activeEmployees.map(emp => `<option value="${emp.id}">${emp.name} (${emp.position})</option>`).join('');
+        }
+
+        // 교육 추가 버튼
+        document.getElementById('addTrainingBtn').addEventListener('click', function() {
+            document.getElementById('trainingForm').reset();
+            document.getElementById('trainingModal').classList.remove('hidden');
+            document.getElementById('trainingModal').classList.add('flex');
+        });
+
+        // 교육 폼 제출
+        document.getElementById('trainingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: Date.now().toString(),
+                employeeId: document.getElementById('trainingEmployee').value,
+                name: document.getElementById('trainingName').value,
+                institute: document.getElementById('trainingInstitute').value,
+                date: document.getElementById('trainingDate').value,
+                completed: document.getElementById('trainingCompleted').value === 'true'
+            };
+
+            training.push(formData);
+            saveData();
+            closeTrainingModal();
+            displayTraining();
+        });
+
+        // 교육 삭제
+        function deleteTraining(id) {
+            if (confirm('이 교육 이력을 삭제하시겠습니까?')) {
+                training = training.filter(t => t.id !== id);
+                saveData();
+                displayTraining();
+            }
+        }
+
+        // 교육 모달 닫기
+        function closeTrainingModal() {
+            document.getElementById('trainingModal').classList.add('hidden');
+            document.getElementById('trainingModal').classList.remove('flex');
+        }
+
+        document.getElementById('cancelTrainingBtn').addEventListener('click', closeTrainingModal);
+
+        // 데이터 저장
+        function saveData() {
+            localStorage.setItem('employees', JSON.stringify(employees));
+            localStorage.setItem('training', JSON.stringify(training));
+        }
+
+        // 초기 로드
+        document.addEventListener('DOMContentLoaded', function() {
+            // 샘플 데이터 (처음 실행 시)
+            if (employees.length === 0) {
+                employees = [
+                    {
+                        id: '1',
+                        name: '김민수',
+                        phone: '010-1234-5678',
+                        email: 'minsu@gohair.com',
+                        position: '디자이너',
+                        joinDate: '2024-01-15',
+                        salary: '300',
+                        status: 'active'
+                    },
+                    {
+                        id: '2',
+                        name: '이지은',
+                        phone: '010-2345-6789',
+                        email: 'jieun@gohair.com',
+                        position: '팀장',
+                        joinDate: '2023-06-01',
+                        salary: '450',
+                        status: 'active'
+                    }
+                ];
+                saveData();
+            }
+        });
+    </script>
+
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDqGSBbsozTIOhLzRu0pNwbUVvkA5qe3b97NQ9Xwp%2BfEPNvLEigSnKjiceFmcYVlA4PEoUaaiAjiAW3kMRrD9a2PKNYFfdAQpQADr7yztuHryHcK8n3r54%2FYN1q6edeW5EH3avqUf2EJXvOcxRQwtEOW5zeB1wso%2FTlONzRAlvKZiSZ0%2FCV%2B%2ByFSzomFrolSunYuSHp3vJf1cuoFURQFq56nbzZcRNMIZiAZ8g6xpLRqWK8VtJF4R0lQZBmV%2BxAPdq24z5hH4ExrmBlb%2Be%2B5Hv1PDK1RLjsRYHlTjM9nVaCTJ3%2FSNnDNZwHyISwehUKDaLyhuq7eE%2F6Br5SIzROO3zZSIFzzqZPEn0UhoWPQhIFbHOhPJGLRAq3b%2FSANkPOC4ffO%2BzlFeutAB%2BPh68S86PI6YeyzrmOuQT6bN4JOmuia1oYK9UsnXbPUOOdce6397q5jnQzgzJde9ldJqP72%2FHb5xIEJqHcOJFuUHTDZpc1u5NuAOf11d0q9fM7gCYC5EcQ%3D%3D";
+        window.__genspark_locale = "ko-KR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDqGSBbsozTIOhLzRu0pNwbUVvkA5qe3b97NQ9Xwp+fEPNvLEigSnKjiceFmcYVlA4PEoUaaiAjiAW3kMRrD9a2PKNYFfdAQpQADr7yztuHryHcK8n3r54/YN1q6edeW5EH3avqUf2EJXvOcxRQwtEOW5zeB1wso/TlONzRAlvKZiSZ0/CV++yFSzomFrolSunYuSHp3vJf1cuoFURQFq56nbzZcRNMIZiAZ8g6xpLRqWK8VtJF4R0lQZBmV+xAPdq24z5hH4ExrmBlb+e+5Hv1PDK1RLjsRYHlTjM9nVaCTJ3/SNnDNZwHyISwehUKDaLyhuq7eE/6Br5SIzROO3zZSIFzzqZPEn0UhoWPQhIFbHOhPJGLRAq3b/SANkPOC4ffO+zlFeutAB+Ph68S86PI6YeyzrmOuQT6bN4JOmuia1oYK9UsnXbPUOOdce6397q5jnQzgzJde9ldJqP72/Hb5xIEJqHcOJFuUHTDZpc1u5NuAOf11d0q9fM7gCYC5EcQ==";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="./index_files/notice_dialog.js.다운로드"></script>
+    <div class="genspark-notice-dialog" style="display: none;">
+      <div class="genspark-notice-content">
+        <h2 class="genspark-notice-title">이 사이트는 사용자가 만들었습니다. 참고하세요:</h2>
+        <ul class="genspark-notice-list">
+          <li>콘텐츠에 부정확한 정보가 포함될 수 있으니, 사용하기 전에 정보를 확인하세요.</li>
+          <li>부적절한 콘텐츠를 발견하시면 <a href="mailto:support@genspark.ai">support@genspark.ai</a>로 연락해 주세요.</li>
+        </ul>
+        <div class="genspark-notice-checkbox">
+          <input type="checkbox" id="genspark-dont-show">
+          <label for="genspark-dont-show">이 메시지를 다시 표시하지 않음.</label>
+        </div>
+        <div class="genspark-notice-actions">
+          <button class="genspark-notice-ok">확인</button>
+        </div>
+      </div>
+    </div></body></html>
